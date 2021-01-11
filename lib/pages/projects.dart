@@ -3,14 +3,23 @@ import '../pages/pages.dart';
 import '../model/project.dart';
 
 class Projects extends StatelessWidget {
+  final String title;
+
+  Projects({@required this.title});
+
   final List<Project> projects = ProjectsList().projects;
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    //double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      appBar: width < 900 ? CustomAppBar(title: title) : null,
+      drawer: width < 900 ? CustomDrawer() : null,
       body: Column(
         children: [
-          CustomHeader(),
+          width < 900 ? Container() : CustomHeader(),
           CustomBody(
             desktopLayoutWidget: desktopLayoutWidget(),
             mobileLayoutWidget: mobileLayoutWidget(),
@@ -24,7 +33,7 @@ class Projects extends StatelessWidget {
     return GridView.builder(
       itemCount: projects.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4, mainAxisSpacing: 10.0, crossAxisSpacing: 10.0),
+          crossAxisCount: 5, mainAxisSpacing: 10.0, crossAxisSpacing: 10.0),
       itemBuilder: (context, index) {
         return CustomCard(project: projects[index]);
       },
@@ -35,7 +44,7 @@ class Projects extends StatelessWidget {
     return GridView.builder(
       scrollDirection: Axis.vertical,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
+        crossAxisCount: 2,
         childAspectRatio: 1.4,
         mainAxisSpacing: 15.0,
       ),
@@ -78,19 +87,21 @@ class CustomCard extends StatelessWidget {
               ListTile(
                 title: Text(
                   project.name,
+                  textAlign: TextAlign.center,
                 ),
-                subtitle: Text(
-                  project.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                // subtitle: Text(
+                //   project.description,
+                //   maxLines: 3,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
               ),
             ],
           ),
         ),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ProjectDetail(project: project)));
+              builder: (context) =>
+                  ProjectDetail(project: project, title: project.name)));
         },
       ),
     );

@@ -20,21 +20,18 @@ class MyApp extends StatelessWidget {
             themeMode: themeModel.currentTheme(),
             theme: ThemeData(
               bottomAppBarColor: Colors.grey[300],
-              primaryColor: Colors.yellow,
+              primaryColor: Colors.white,
+              accentColor: Colors.black,
               fontFamily: 'Courgette',
             ),
             darkTheme: ThemeData(
               brightness: Brightness.dark,
               primaryColor: Colors.black,
+              accentColor: Colors.white,
               bottomAppBarColor: Colors.black38,
               fontFamily: 'Courgette',
             ),
-            //home: HomePage(),
-            routes: {
-              '/': (context) => HomePage(),
-              'projects': (context) => Projects(),
-              //'project_detail': (context) => ProjectDetail(),
-            },
+            home: HomePage(title: 'about me'),
           );
         },
       ),

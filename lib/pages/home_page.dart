@@ -1,36 +1,97 @@
 import 'package:flutter/material.dart';
 import '../pages/pages.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget {
+  final String title;
 
-class _HomePageState extends State<HomePage> {
+  HomePage({@required this.title});
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    //double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      appBar: width < 900 ? CustomAppBar(title: title) : null,
+      drawer: width < 900 ? CustomDrawer() : null,
       body: Column(
         children: [
-          CustomHeader(),
+          width < 900 ? Container() : CustomHeader(),
+          SizedBox(
+            height: 20,
+          ),
           CustomBody(
-            desktopLayoutWidget: desktopLayoutWidget(),
-            mobileLayoutWidget: mobileLayoutWidget(),
+            desktopLayoutWidget: desktopLayoutWidget(width),
+            mobileLayoutWidget: mobileLayoutWidget(width),
           ),
         ],
       ),
     );
   }
 
-  Widget desktopLayoutWidget() {
+  Widget desktopLayoutWidget(double width) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              //color: Colors.red,
+              width: width * 0.3,
+              child: CircleAvatar(
+                radius: width * .11,
+                backgroundImage: NetworkImage(
+                  'https://images.unsplash.com/photo-1602471615287-d733c59b79c4?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80',
+                ),
+              ),
+            ),
+          ],
+        ),
+        Flexible(
+          child: Container(
+            //color: Colors.green,
+            padding: EdgeInsets.only(right: width * 0.05),
+            width: width * 0.7,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hi, my name is Ravi Horo. I'm a budding Flutter developer. Welcome to my personal website.",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                customRow('Language', ['Dart', 'Java', 'SQL']),
+                customRow('Framework', ['Flutter']),
+                customRow('VCS', ['Git']),
+                customRow('Certification', ['CCNA', 'Devnet']),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget customRow(String title, List<String> str) {
+    return Row(
+      children: [
+        Text('$title: '),
+        chipList(str),
+      ],
+    );
+  }
+
+  Widget mobileLayoutWidget(double width) {
+    return Column(
       children: [
         Container(
-          color: Colors.red,
-          width: MediaQuery.of(context).size.width * 0.3,
+          padding: const EdgeInsets.all(10.0),
           child: CircleAvatar(
-            radius: MediaQuery.of(context).size.width * .11,
+            radius: width * .2,
             backgroundImage: NetworkImage(
               'https://images.unsplash.com/photo-1602471615287-d733c59b79c4?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80',
             ),
@@ -38,37 +99,42 @@ class _HomePageState extends State<HomePage> {
         ),
         Flexible(
           child: Container(
-            color: Colors.green,
-            padding: EdgeInsets.only(
-                right: MediaQuery.of(context).size.width * 0.05),
-            width: MediaQuery.of(context).size.width * 0.7,
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Text(
-              "What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+              "Hi, my name is Ravi Horo. I\'m a budding Flutter developer. Welcome to my personal website.",
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
+        Text('Language:'),
+        chipList(['Dart', 'Java', 'SQL']),
+        Text('Framework:'),
+        chipList(['Flutter']),
+        Text('VCS:'),
+        chipList(['Git']),
+        Text('Certification: '),
+        chipList(['CCNA', 'Devnet']),
       ],
     );
   }
 
-  Widget mobileLayoutWidget() {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: MediaQuery.of(context).size.width * .2,
-          backgroundImage: NetworkImage(
-            'https://images.unsplash.com/photo-1602471615287-d733c59b79c4?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80',
-          ),
-        ),
-        Flexible(
-          child: Container(
-            child: Text(
-              "What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            ),
-          ),
-        ),
-      ],
+  Widget chipList(List<String> labels) {
+    return Wrap(
+      spacing: 6.0,
+      runSpacing: 6.0,
+      children: [for (String s in labels) _buildChip(s)],
+    );
+  }
+
+  Widget _buildChip(String label) {
+    return Chip(
+      label: Text(
+        label,
+      ),
     );
   }
 }

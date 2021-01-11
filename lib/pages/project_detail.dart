@@ -1,34 +1,151 @@
 import 'package:flutter/material.dart';
 import '../model/project.dart';
 import './pages.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ProjectDetail extends StatefulWidget {
+class ProjectDetail extends StatelessWidget {
   final Project project;
+  final String title;
 
-  ProjectDetail({@required this.project});
+  ProjectDetail({@required this.project, @required this.title});
 
-  @override
-  _ProjectDetailState createState() => _ProjectDetailState();
-}
-
-class _ProjectDetailState extends State<ProjectDetail> {
-  PageController pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController(initialPage: 0, viewportFraction: 0.8);
-  }
+  final PageController pageController =
+      PageController(initialPage: 0, viewportFraction: 0.8);
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      appBar: width < 900 ? CustomAppBar(title: title) : null,
+      drawer: width < 900 ? CustomDrawer() : null,
       body: Column(
         children: [
-          CustomHeader(),
+          width < 900 ? Container() : CustomHeader(),
+          width < 900 ? Container() : TitleContainer(title: project.name),
           CustomBody(
-            desktopLayoutWidget: desktopLayoutWidget(),
-            mobileLayoutWidget: mobileLayoutWidget(),
+            desktopLayoutWidget: desktopLayoutWidget(width, height, context),
+            mobileLayoutWidget: mobileLayoutWidget(width, context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget desktopLayoutWidget(
+      double width, double height, BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: width * 0.3,
+          height: height * 0.75,
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: pageController,
+                  itemCount: project.images.length,
+                  itemBuilder: (context, index) {
+                    return imageSlider(index);
+                  },
+                ),
+              ),
+              Container(
+                child: SmoothPageIndicator(
+                  count: project.images.length,
+                  controller: pageController,
+                  effect: WormEffect(
+                    activeDotColor: Theme.of(context).accentColor,
+                    dotColor: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Flexible(
+          child: Container(
+            width: width * 0.7,
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                customContainer('Description', [project.description]),
+                SizedBox(
+                  height: 15.0,
+                ),
+                customContainer('Features', project.features),
+                SizedBox(
+                  height: 15.0,
+                ),
+                customContainer('Tools Used', project.toolsUsed),
+                SizedBox(
+                  height: 15.0,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget mobileLayoutWidget(double width, BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            width: width * 0.8,
+            height: 600,
+            child: Column(
+              children: [
+                Flexible(
+                  child: PageView.builder(
+                    controller: pageController,
+                    itemCount: project.images.length,
+                    itemBuilder: (context, index) {
+                      return imageSlider(index);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Container(
+                  child: SmoothPageIndicator(
+                    count: project.images.length,
+                    controller: pageController,
+                    effect: WormEffect(
+                      activeDotColor: Theme.of(context).primaryColor,
+                      dotColor: Theme.of(context).accentColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 15.0,
+                ),
+                customContainer('Description', [project.description]),
+                SizedBox(
+                  height: 15.0,
+                ),
+                customContainer('Features', project.features),
+                SizedBox(
+                  height: 15.0,
+                ),
+                customContainer('Tools Used', project.toolsUsed),
+                SizedBox(
+                  height: 15.0,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -47,90 +164,73 @@ class _ProjectDetailState extends State<ProjectDetail> {
 
         return Center(
           child: SizedBox(
-            height: Curves.easeInOut.transform(value) * 200,
-            width: Curves.easeInOut.transform(value) * 300,
+            height: Curves.easeInOut.transform(value) * 600,
+            width: Curves.easeInOut.transform(value) * 400,
             child: widget,
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.all(5.0),
-        child: Image.network(
-          widget.project.images[index],
-          fit: BoxFit.cover,
+      child: Card(
+        elevation: 10.0,
+        child: Container(
+          margin: const EdgeInsets.all(5.0),
+          child: Image.network(
+            project.images[index],
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
   }
 
-  Widget desktopLayoutWidget() {
-    return Row(
-      children: [
-        Container(
-          color: Colors.red,
-          width: MediaQuery.of(context).size.width * 0.3,
-          child: PageView.builder(
-            controller: pageController,
-            itemCount: widget.project.images.length,
-            itemBuilder: (context, index) {
-              return imageSlider(index);
-            },
+  Widget customContainer(String title, List<String> body) {
+    return Container(
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: title,
+          labelStyle: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        Flexible(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            color: Colors.blue,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.project.name,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (String s in body)
+              Text(
+                "\u2022 $s",
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w400,
                 ),
-                Text(
-                  widget.project.description,
-                ),
-              ],
-            ),
-          ),
+              )
+          ],
         ),
-      ],
+      ),
     );
   }
+}
 
-  Widget mobileLayoutWidget() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: Colors.red,
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: 400,
-            child: PageView.builder(
-              controller: pageController,
-              itemCount: widget.project.images.length,
-              itemBuilder: (context, index) {
-                return imageSlider(index);
-              },
-            ),
-          ),
-          Container(
-            color: Colors.blue,
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: 300,
-            child: Column(
-              children: [
-                Text(
-                  widget.project.name,
-                ),
-                Text(
-                  widget.project.description,
-                ),
-              ],
-            ),
-          ),
-        ],
+class TitleContainer extends StatelessWidget {
+  final String title;
+
+  TitleContainer({@required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1.0,
+          color: Theme.of(context).accentColor,
+        ),
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Text(
+        title,
+        style: TextStyle(color: Theme.of(context).accentColor, fontSize: 40.0),
       ),
     );
   }
