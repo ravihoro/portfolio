@@ -128,8 +128,8 @@ class ProjectDetail extends StatelessWidget {
             count: project.images.length,
             controller: pageController,
             effect: WormEffect(
-              activeDotColor: Theme.of(context).primaryColor,
-              dotColor: Theme.of(context).accentColor,
+              activeDotColor: Theme.of(context).accentColor,
+              dotColor: Colors.grey,
             ),
           ),
         ),

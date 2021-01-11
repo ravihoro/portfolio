@@ -9,24 +9,26 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
+    return SafeArea(
+      child: AppBar(
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
         ),
-      ),
-      leading: IconButton(
-        icon: Icon(
-          Icons.menu,
-          color: Theme.of(context).primaryColor,
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
-        onPressed: () {
-          Scaffold.of(context).openDrawer();
-        },
+        centerTitle: true,
+        backgroundColor: Theme.of(context).accentColor,
       ),
-      centerTitle: true,
-      backgroundColor: Theme.of(context).accentColor,
     );
   }
 }

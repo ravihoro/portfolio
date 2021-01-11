@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../pages/pages.dart';
 import '../model/project.dart';
+import 'package:provider/provider.dart';
+import '../model/theme_model.dart';
 
 class Projects extends StatelessWidget {
   final String title;
@@ -65,10 +67,15 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeModel = Provider.of<ThemeModel>(context);
+    bool val = themeModel.isDark;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GestureDetector(
         child: Card(
+          elevation: 5.0,
+          shadowColor: val ? Colors.white : Colors.black,
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
