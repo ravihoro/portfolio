@@ -40,29 +40,7 @@ class ProjectDetail extends StatelessWidget {
         Container(
           width: width * 0.3,
           height: height * 0.75,
-          child: Column(
-            children: [
-              Expanded(
-                child: PageView.builder(
-                  controller: pageController,
-                  itemCount: project.images.length,
-                  itemBuilder: (context, index) {
-                    return imageSlider(index);
-                  },
-                ),
-              ),
-              Container(
-                child: SmoothPageIndicator(
-                  count: project.images.length,
-                  controller: pageController,
-                  effect: WormEffect(
-                    activeDotColor: Theme.of(context).accentColor,
-                    dotColor: Colors.grey,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: customImageSlider(context),
         ),
         Flexible(
           child: Container(
@@ -95,35 +73,13 @@ class ProjectDetail extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          SizedBox(
+            height: 15.0,
+          ),
           Container(
             width: width * 0.8,
             height: 600,
-            child: Column(
-              children: [
-                Flexible(
-                  child: PageView.builder(
-                    controller: pageController,
-                    itemCount: project.images.length,
-                    itemBuilder: (context, index) {
-                      return imageSlider(index);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Container(
-                  child: SmoothPageIndicator(
-                    count: project.images.length,
-                    controller: pageController,
-                    effect: WormEffect(
-                      activeDotColor: Theme.of(context).primaryColor,
-                      dotColor: Theme.of(context).accentColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: customImageSlider(context),
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -152,6 +108,35 @@ class ProjectDetail extends StatelessWidget {
     );
   }
 
+  Widget customImageSlider(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: project.images.length,
+            itemBuilder: (context, index) {
+              return imageSlider(index);
+            },
+          ),
+        ),
+        SizedBox(
+          height: 5.0,
+        ),
+        Container(
+          child: SmoothPageIndicator(
+            count: project.images.length,
+            controller: pageController,
+            effect: WormEffect(
+              activeDotColor: Theme.of(context).primaryColor,
+              dotColor: Theme.of(context).accentColor,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   imageSlider(int index) {
     return AnimatedBuilder(
       animation: pageController,
@@ -164,7 +149,7 @@ class ProjectDetail extends StatelessWidget {
 
         return Center(
           child: SizedBox(
-            height: Curves.easeInOut.transform(value) * 600,
+            height: Curves.easeInOut.transform(value) * 500,
             width: Curves.easeInOut.transform(value) * 400,
             child: widget,
           ),
