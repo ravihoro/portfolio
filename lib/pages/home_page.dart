@@ -33,20 +33,25 @@ class HomePage extends StatelessWidget {
     return Row(
       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              //color: Colors.red,
-              width: width * 0.3,
-              child: CircleAvatar(
-                radius: width * .11,
-                backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1602471615287-d733c59b79c4?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80',
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: width * 0.3,
+                width: width * 0.3,
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(
+                    'assets/assets/profile.png',
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 20,
         ),
         Flexible(
           child: Container(
@@ -67,7 +72,7 @@ class HomePage extends StatelessWidget {
                 customRow('Language', ['Dart', 'Java', 'SQL']),
                 customRow('Framework', ['Flutter']),
                 customRow('VCS', ['Git']),
-                customRow('Certification', ['CCNA', 'Devnet']),
+                customRow('Certification', ['CCNA', 'DevNet Associate']),
               ],
             ),
           ),
@@ -92,9 +97,7 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: CircleAvatar(
             radius: width * .2,
-            backgroundImage: NetworkImage(
-              'https://images.unsplash.com/photo-1602471615287-d733c59b79c4?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1051&q=80',
-            ),
+            backgroundImage: AssetImage('assets/assets/profile.png'),
           ),
         ),
         Flexible(
@@ -117,7 +120,7 @@ class HomePage extends StatelessWidget {
         Text('VCS:'),
         chipList(['Git']),
         Text('Certification: '),
-        chipList(['CCNA', 'Devnet']),
+        chipList(['CCNA', 'DevNet Associate']),
       ],
     );
   }
