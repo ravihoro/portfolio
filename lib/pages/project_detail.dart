@@ -19,11 +19,12 @@ class ProjectDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: width < 900 ? CustomAppBar(title: title) : null,
-      drawer: width < 900 ? CustomDrawer() : null,
+      //drawer: width < 900 ? CustomDrawer() : null,
       body: Column(
         children: [
-          width < 900 ? Container() : CustomHeader(),
-          width < 900 ? Container() : TitleContainer(title: project.name),
+          //width < 900 ? Container() : CustomHeader(),
+          //width < 900 ? Container() : TitleContainer(title: project.name),
+          TitleContainer(title: project.name),
           CustomBody(
             desktopLayoutWidget: desktopLayoutWidget(width, height, context),
             mobileLayoutWidget: mobileLayoutWidget(width, context),
@@ -128,7 +129,7 @@ class ProjectDetail extends StatelessWidget {
             count: project.images.length,
             controller: pageController,
             effect: WormEffect(
-              activeDotColor: Theme.of(context).accentColor,
+              activeDotColor: Colors.black,
               dotColor: Colors.grey,
             ),
           ),
@@ -209,13 +210,16 @@ class TitleContainer extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1.0,
-          color: Theme.of(context).accentColor,
+          color: Colors.black,
         ),
-        color: Theme.of(context).primaryColor,
+        color: Colors.black,
       ),
       child: Text(
         title,
-        style: TextStyle(color: Theme.of(context).accentColor, fontSize: 40.0),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 40.0,
+        ),
       ),
     );
   }
